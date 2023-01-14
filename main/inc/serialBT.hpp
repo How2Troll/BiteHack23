@@ -5,4 +5,4 @@
 
 void setupBT(BluetoothSerial);
 
-int checkSerial(BluetoothSerial);
+char checkSerial(BluetoothSerial);
