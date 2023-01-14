@@ -1,7 +1,6 @@
-#include <src/hc-sr501.h>
+#include "hc-sr501.h"
 
-int val = 0;
-bool motionState; // We start with no motion detected.
+val = 0;
 
 void motionCheckInitialize() //initialize
 {
