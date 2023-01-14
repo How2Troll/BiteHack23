@@ -5,6 +5,8 @@
 
 #include <L298NX2.h>
 
+
+void move();
 BluetoothSerial SerialBT;
 // Pin definition
 const unsigned int EN_A = 16;
@@ -14,6 +16,7 @@ const unsigned int IN2_A = 18;
 const unsigned int IN1_B = 19;
 const unsigned int IN2_B = 21;
 const unsigned int EN_B = 17;
+const uint8_t buzz = 4;
 
 int direction;
 
@@ -24,6 +27,8 @@ void setup(){
     setupPir();
     Serial.begin(115200);
     SerialBT.begin("Skunks");
+    pinMode(buzz, OUTPUT);
+    digitalWrite(buzz, LOW);
 }
 
 void loop(){
@@ -33,6 +38,11 @@ void loop(){
   }
   delay(20);
   bool motionState = loopPir();
+  move(motionState);
+}
+
+
+void move(bool state){
   if(direction == 0x31){
         motors.reset();
         Serial.write("ua1\n");
@@ -51,5 +61,11 @@ void loop(){
         motors.setSpeedB(0x00);
         motors.stopA();
         motors.stopB();
+    }
+    if(state == true){
+      Serial.print("UAAAAA\n");
+      digitalWrite(buzz, HIGH);
+      delay(1000);
+      digitalWrite(buzz, LOW);
     }
 }
