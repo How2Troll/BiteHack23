@@ -1,27 +1,25 @@
-#include <src/hc-sr501.h>
+#include <stdio.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_system.h"
+#include "nvs_flash.h"
 
-int val = 0;
-bool motionState; // We start with no motion detected.
 
-void motionCheckInitialize() //initialize
-{
-    pinMode(pirPin, input);
-    pinMode(ledPin, output);
+void app_main(){
+  nvs_flash_init();
+  xTaskCreate(&hello_task, "hello_task", 2048, NULL, 5, NULL);
 }
 
-bool motionCheck()
+void setup()
 {
-  val = digitalRead(pirPin);
+  app_main();
+}
 
-  if(val == HIGH)
-  {
-    motionState == true;
-    digitalWrite(ledPin, HIGH);
-  }
-  else
-  {
-    motionState == false;
-    digitalWrite(ledPin, LOW);
-  }
-  return motionState;
+void loop()
+{  
+}
+
+
+void hello_task(void *pvParameter)
+{
 }
