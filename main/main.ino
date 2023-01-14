@@ -37,6 +37,9 @@ void loop(){
         motors.reset();
         Serial.write("ua1\n");
         delay(2000);
+        motors.setSpeedA(0x40);
+        motors.setSpeedB(0x40);
+
         motors.forwardA();
         motors.forwardB();
     }
@@ -44,6 +47,8 @@ void loop(){
         motors.reset();
         Serial.write("ua2\n");
         delay(2000);
+        motors.setSpeedA(0x00);
+        motors.setSpeedB(0x00);
         motors.stopA();
         motors.stopB();
     }
