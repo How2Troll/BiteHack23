@@ -1,7 +1,6 @@
 #include "BluetoothSerial.h"
 #include "inc/serialBT.hpp"
 
-int direction;
 void setupBT(BluetoothSerial SerialBT) {
   SerialBT.begin("Skunks"); 
   Serial.println("The device started, now you can pair it with bluetooth!");
@@ -10,8 +9,8 @@ void setupBT(BluetoothSerial SerialBT) {
 char checkSerial(BluetoothSerial SerialBT) {
   if (SerialBT.available()) 
   {
-    direction = SerialBT.read();
+    delay(20);
+    return SerialBT.read();
   }
-  delay(20);
-  return direction;
+  else return 0;
 }
