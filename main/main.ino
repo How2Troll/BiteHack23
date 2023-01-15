@@ -110,9 +110,11 @@ void move(bool state){
         motors.setSpeedA(0x0A);
         motors.backwardA();
         motors.forwardB();
+        if(motionState){        
         digitalWrite(pump, HIGH);
         digitalWrite(buzz, HIGH);
         delay(1000);
+        }
     }
     else {
         motors.reset();
