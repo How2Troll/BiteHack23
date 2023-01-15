@@ -21,7 +21,7 @@ const uint8_t buzz = 4;
 
 int direction;
 bool manual_mode = true;
-
+float meas = 0;
 // Initialize both motors
 L298NX2 motors(EN_A, IN1_A, IN2_A, EN_B, IN1_B, IN2_B);
 
@@ -53,9 +53,9 @@ void move(bool state){
   if(direction == 0x31){
         motors.reset();
         Serial.write("ua1\n");
-        delay(2000);
-        motors.setSpeedA(0x40);
-        motors.setSpeedB(0x40);
+        delay(10);
+        motors.setSpeedA(0x80);
+        motors.setSpeedB(0x80);
 
         motors.forwardA();
         motors.forwardB();
@@ -63,7 +63,7 @@ void move(bool state){
     else if(direction == 0x32){
         motors.reset();
         Serial.write("ua2\n");
-        delay(2000);
+        delay(10);
         motors.setSpeedA(0x00);
         motors.setSpeedB(0x00);
         motors.stopA();
@@ -72,9 +72,9 @@ void move(bool state){
     else if(direction == 0x34){
         motors.reset();
         Serial.write("ua3\n");
-        delay(2000);
+        delay(10);
         motors.setSpeedA(0x80);
-        motors.setSpeedB(0x0A);
+        motors.setSpeedB(0x40);
 
         motors.forwardA();
         motors.backwardB();
@@ -82,9 +82,9 @@ void move(bool state){
     else if(direction == 0x33){
         motors.reset();
         Serial.write("ua4\n");
-        delay(2000);
+        delay(10);
         motors.setSpeedB(0x80);
-        motors.setSpeedA(0x0A);
+        motors.setSpeedA(0x40);
 
         motors.backwardA();
         motors.forwardB();
@@ -95,22 +95,23 @@ void move(bool state){
     if(state == true){
       digitalWrite(buzz, HIGH);
       digitalWrite(pump, HIGH);
-      delay(1000);
+      delay(10);
       digitalWrite(buzz, LOW);
       digitalWrite(pump, LOW);
     } 
   }
   else{
-    if(distanceSensor.measureDistanceCm()>0 && distanceSensor.measureDistanceCm()<10)
+    meas = distanceSensor.measureDistanceCm();
+    if(meas>0 && meas<10)
     {
         motors.reset();
         Serial.write("ua4\n");
-        delay(2000);
+        delay(10);
         motors.setSpeedB(0x80);
-        motors.setSpeedA(0x0A);
+        motors.setSpeedA(0x40);
         motors.backwardA();
         motors.forwardB();
-        if(motionState){        
+        if(state){        
         digitalWrite(pump, HIGH);
         digitalWrite(buzz, HIGH);
         delay(1000);
@@ -121,9 +122,9 @@ void move(bool state){
         Serial.write("ua4\n");
         digitalWrite(buzz, LOW);
         digitalWrite(pump, LOW); 
-        delay(2000);
+        delay(10);
         motors.setSpeedB(0x80);
-        motors.setSpeedA(0x0A);
+        motors.setSpeedA(0x80);
         motors.forwardA();
         motors.forwardB();
     }
