@@ -48,7 +48,7 @@ void loop()
 }
 
 
-void move(bool state,bool manual_mode){
+void move(bool state){
   if(manual_mode){
   if(direction == 0x31){
         motors.reset();
@@ -125,7 +125,12 @@ void move(bool state,bool manual_mode){
         motors.forwardA();
         motors.forwardB();
     }
-
-
+  if (SerialBT.available()) 
+    {
+      if (SerialBT.read() == 0x31);
+      {
+        manual_mode = true;
+      }
+    }
   }
 }
