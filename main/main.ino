@@ -2,12 +2,13 @@
 #include "inc/example.hpp"
 #include "inc/pirSensor.hpp"
 #include "BluetoothSerial.h"
-
+#include <HCSR04.h>
 #include <L298NX2.h>
 
-
+#define pump 15
 void move();
 BluetoothSerial SerialBT;
+UltraSonicDistanceSensor distanceSensor(14, 27);
 // Pin definition
 const unsigned int EN_A = 16;
 const unsigned int IN1_A = 5;
@@ -29,9 +30,12 @@ void setup(){
     SerialBT.begin("Skunks");
     pinMode(buzz, OUTPUT);
     digitalWrite(buzz, LOW);
+    pinMode(pump, OUTPUT);
 }
 
 void loop(){
+  Serial.println(distanceSensor.measureDistanceCm());
+  delay(500);
   if (SerialBT.available()) 
   {
     direction = SerialBT.read();
@@ -61,13 +65,6 @@ void move(bool state){
         motors.setSpeedB(0x00);
         motors.stopA();
         motors.stopB();
-        
-        if(state == true){
-          digitalWrite(buzz, HIGH);
-          motors.forwardFor(1000);
-          delay(1000);
-          digitalWrite(buzz, LOW);
-        } 
     }
     else if(direction == 0x34){
         motors.reset();
@@ -89,4 +86,11 @@ void move(bool state){
         motors.backwardA();
         motors.forwardB();
     }
+    if(state == true){
+      digitalWrite(buzz, HIGH);
+      digitalWrite(pump, HIGH);
+      delay(1000);
+      digitalWrite(buzz, LOW);
+      digitalWrite(pump, LOW);
+    } 
 }
