@@ -61,16 +61,14 @@ void move(bool state){
         motors.setSpeedB(0x00);
         motors.stopA();
         motors.stopB();
-          if(state == true){
-            digitalWrite(buzz, HIGH);
-            motors.forward();
-            delay(1000);
-            motors.stop();
-            //TODO: piss();
-            digitalWrite(buzz, LOW);
-          }
+        
+        if(state == true){
+          digitalWrite(buzz, HIGH);
+          motors.forwardFor(1000);
+          delay(1000);
+          digitalWrite(buzz, LOW);
+        } 
     }
-    
     else if(direction == 0x34){
         motors.reset();
         Serial.write("ua3\n");
