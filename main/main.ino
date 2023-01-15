@@ -62,6 +62,26 @@ void move(bool state){
         motors.stopA();
         motors.stopB();
     }
+    else if(direction == 0x34){
+        motors.reset();
+        Serial.write("ua3\n");
+        delay(2000);
+        motors.setSpeedA(0x80);
+        motors.setSpeedB(0x40);
+
+        motors.forwardA();
+        motors.forwardB();
+    }
+    else if(direction == 0x33){
+        motors.reset();
+        Serial.write("ua4\n");
+        delay(2000);
+        motors.setSpeedB(0x80);
+        motors.setSpeedA(0x40);
+
+        motors.forwardA();
+        motors.forwardB();
+    }
     if(state == true){
       Serial.print("UAAAAA\n");
       digitalWrite(buzz, HIGH);
