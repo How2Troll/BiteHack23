@@ -20,6 +20,7 @@ const unsigned int EN_B = 17;
 const uint8_t buzz = 4;
 
 int direction;
+bool manual_mode = true;
 
 // Initialize both motors
 L298NX2 motors(EN_A, IN1_A, IN2_A, EN_B, IN1_B, IN2_B);
@@ -33,7 +34,8 @@ void setup(){
     pinMode(pump, OUTPUT);
 }
 
-void loop(){
+void loop()
+{
   Serial.println(distanceSensor.measureDistanceCm());
   delay(500);
   if (SerialBT.available()) 
@@ -46,7 +48,8 @@ void loop(){
 }
 
 
-void move(bool state){
+void move(bool state,bool manual_mode){
+  if(manual_mode){
   if(direction == 0x31){
         motors.reset();
         Serial.write("ua1\n");
@@ -86,6 +89,9 @@ void move(bool state){
         motors.backwardA();
         motors.forwardB();
     }
+      else if(direction == 0x35){
+        manual_mode = false;
+    }
     if(state == true){
       digitalWrite(buzz, HIGH);
       digitalWrite(pump, HIGH);
@@ -93,4 +99,33 @@ void move(bool state){
       digitalWrite(buzz, LOW);
       digitalWrite(pump, LOW);
     } 
+  }
+  else{
+    if(distanceSensor.measureDistanceCm()>0 && distanceSensor.measureDistanceCm()<10)
+    {
+        motors.reset();
+        Serial.write("ua4\n");
+        delay(2000);
+        motors.setSpeedB(0x80);
+        motors.setSpeedA(0x0A);
+        motors.backwardA();
+        motors.forwardB();
+        digitalWrite(pump, HIGH);
+        digitalWrite(buzz, HIGH);
+        delay(1000);
+    }
+    else {
+        motors.reset();
+        Serial.write("ua4\n");
+        digitalWrite(buzz, LOW);
+        digitalWrite(pump, LOW); 
+        delay(2000);
+        motors.setSpeedB(0x80);
+        motors.setSpeedA(0x0A);
+        motors.forwardA();
+        motors.forwardB();
+    }
+
+
+  }
 }
