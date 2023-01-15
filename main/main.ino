@@ -5,6 +5,8 @@
 
 #include <L298NX2.h>
 
+#define trigPin 12
+#define echoPin 14
 
 void move();
 BluetoothSerial SerialBT;
@@ -19,7 +21,7 @@ const unsigned int EN_B = 17;
 const uint8_t buzz = 4;
 
 int direction;
-
+bool manual_mode;
 // Initialize both motors
 L298NX2 motors(EN_A, IN1_A, IN2_A, EN_B, IN1_B, IN2_B);
 
@@ -29,6 +31,8 @@ void setup(){
     SerialBT.begin("Skunks");
     pinMode(buzz, OUTPUT);
     digitalWrite(buzz, LOW);
+    pinMode(trigPin, OUTPUT); //Pin, do którego podłączymy trig jako wyjście
+    pinMode(echoPin, INPUT);
 }
 
 void loop(){
@@ -42,7 +46,9 @@ void loop(){
 }
 
 
-void move(bool state){
+void move(bool state)
+{
+  if(manual_mode){
   if(direction == 0x31){
         motors.reset();
         Serial.write("ua1\n");
@@ -91,4 +97,24 @@ void move(bool state){
         motors.backwardA();
         motors.forwardB();
     }
+    else if(direction == 0x35){
+        motors.reset();
+        manual_mode=false;
+        delay(2000);    }
+  }
+  else
+  {
+  long czas, dystans;
+ 
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+ 
+  czas = pulseIn(echoPin, HIGH);
+  dystans = czas / 58;
+ 
+  Serial.write(dystans);
+  }
 }
